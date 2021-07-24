@@ -1,5 +1,5 @@
 const fs = require('fs');
-const urlFilePath = `${__dirname}/../dev-data/data/tours.json`;
+const urlFilePath = `${__dirname}/../dev-data/data/tours-simple.json`;
 
 //bring the files
 const tours = JSON.parse(fs.readFileSync(urlFilePath, 'utf-8'));
@@ -7,6 +7,7 @@ const tours = JSON.parse(fs.readFileSync(urlFilePath, 'utf-8'));
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     message: 'success',
+    timeStamp: req.timeStamp,
     results: tours.length,
     data: { tours },
   });
@@ -31,15 +32,14 @@ exports.getATour = (req, res) => {
 
   //conversion from string to number
   const id = req.params.id * 1;
+  const tour = tours.find((el) => el.id === id);
 
-  if (id > tours.length) {
+  if (!tour) {
     return res.status(404).json({ message: 'invalid' });
   }
 
-  const foundTour = tours.find((el) => el.id == id);
-
   res.status(200).json({
     message: 'success',
-    tour: foundTour,
+    data: { tour },
   });
 };
