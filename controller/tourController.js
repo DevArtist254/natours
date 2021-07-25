@@ -4,6 +4,24 @@ const urlFilePath = `${__dirname}/../dev-data/data/tours-simple.json`;
 //bring the files
 const tours = JSON.parse(fs.readFileSync(urlFilePath, 'utf-8'));
 
+//Custom middleware creation
+//param middleware
+exports.checkId = (req, res, next, val) => {
+  console.log(`the value of  ID is ${val}`);
+  return res.send('done');
+  next();
+};
+//Normal middleware
+exports.middleware = (req, res, next) => {
+  if (!req.body.name || !req.body.name) {
+    return res.status(400).json({
+      msg: 'Bad request',
+    });
+  }
+
+  next();
+};
+
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     message: 'success',

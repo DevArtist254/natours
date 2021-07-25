@@ -5,6 +5,7 @@ const app = express();
 
 //place a middleware to interspect
 app.use(express.json());
+app.use(express.static(`${__dirname}/public/overview.html`));
 
 app.use((req, res, next) => {
   console.log('Hello world');
