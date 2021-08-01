@@ -3,17 +3,19 @@ const {
   getAllTours,
   createATour,
   getATour,
-  checkId,
-  middleware,
+  findAndDelete,
+  findAndUpdate,
 } = require('../controller/tourController');
 
 const router = express.Router();
 
-router.param('id', checkId);
+//router.param('id', checkId);
 
 router.get('/', getAllTours);
 //Chaining middleware
-router.post('/', middleware, createATour);
+router.post('/', createATour);
 router.get('/:id', getATour);
+router.patch('/:id', findAndUpdate);
+router.delete('/:id', findAndDelete);
 
 module.exports = router;
