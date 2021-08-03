@@ -66,7 +66,9 @@ exports.createATour = async (req, res) => {
 
 exports.getATour = async (req, res) => {
   try {
-    const tour = await Tour.findById(req.param.id);
+    const tour = await Tour.findById(req.params.id, (err, tour) => {
+      console.log(err);
+    });
 
     res.status(200).json({
       message: 'success',
@@ -97,7 +99,7 @@ exports.getATour = async (req, res) => {
 
 exports.findAndUpdate = async (req, res) => {
   try {
-    const tour = await Tour.findByIdAndUpdate(req.param.id, req.body, {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -113,7 +115,7 @@ exports.findAndUpdate = async (req, res) => {
 
 exports.findAndDelete = async (req, res) => {
   try {
-    await Tour.findByIdAndDelete(req.param.id);
+    await Tour.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       message: 'success',
