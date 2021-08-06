@@ -25,8 +25,28 @@ const Tour = require('../model/toursModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find({});
+    //1. The Query
+    //Querying for specific items ie url :- /tour?duration=23&difficulty=easy
+    //this returns strictly equal but their equal or greater than or less than move to 1B
+    //Obj request query = {duration:23,difficulty:easy}
+    let queryObj = { ...req.query };
+    let removables = ['page', 'sort', 'limit', 'fields'];
+    removables.forEach((el) => delete queryObj[el]);
 
+    //1B - Matching
+    //url :- /tour?duration[gte]=5 => {duration: {gte : 5}}  target  {duration: {$gte : 5}}
+    //Convert to string
+    let queryString = JSON.stringify(queryObj);
+    //replace the matched str to add enable query
+    queryString = queryString.replace(
+      /\b{gte|gt|lte|lt}\b/g,
+      (match) => `$${match}`
+    );
+    console.log(queryString);
+
+    let query = Tour.find(JSON.parse(queryString));
+
+    const tours = await query;
     res.status(200).json({
       message: 'success',
       results: tours.length,
