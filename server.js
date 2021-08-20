@@ -11,7 +11,12 @@ const dataBase = process.env.DB__URL.replace(
 
 const connectDB = async (DB) => {
   try {
-    await console.log(`The Database is connected ....`);
+    await mongoose.connect(DB, {
+      useFindAndModify: false,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`The Database is connected ....`);
   } catch (error) {
     console.log(err.message);
     process.exit(1);

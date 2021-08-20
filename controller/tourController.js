@@ -69,7 +69,10 @@ exports.findAndUpdate = async (req, res) => {
       runValidators: true,
     });
     res.status(200).json({
-      message: 'updated successfully',
+      message: 'success',
+      data: {
+        tour,
+      },
     });
   } catch (error) {
     res.status(400).json({
@@ -88,6 +91,45 @@ exports.findAndDelete = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: 'failed ',
+    });
+  }
+};
+
+exports.getStatsAvgs = async (req, res) => {
+  try {
+    //Set up the pipeline on the model
+    const stats = await Tour.aggregate([
+      //1st filter the in coming data
+      {
+        $match: {
+          ratingsAverage: { $gte: 4.5 }
+        }
+      },
+      {
+        $group: {
+          _id: '$difficulty',
+          avgPrice: {
+            $avg: '$price'
+          },
+          minPrice: {
+            $min: '$price'
+          },
+          maxPrice: {
+            $max: '$price'
+          }
+        }
+      }
+    ]);
+
+    console.log(stats);
+
+    res.status(200).json({
+      message: 'success',
+      data: { stats },
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error,
     });
   }
 };
