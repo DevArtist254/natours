@@ -131,3 +131,41 @@ exports.getStatsAvgs = async (req, res) => {
     });
   }
 };
+
+exports.getHolidayStats = async (req,res) => {
+  try {
+    const stats = await Tour.aggregate([
+      {$unwind : '$startDates'},
+      {
+        $match : {
+          startDates :{
+            $gte : new Date(`2021-1-1`),
+            $lte : new Date(`2021-12-31`)
+          }
+        }
+      },
+      {
+        $group : {
+          _id : {
+            $month : '$startDates'
+          },
+          numMon : {
+            $sum : 1
+          },
+          tours : {
+            $push : '$name'
+          }
+        }
+      }
+    ])
+    
+    res.status(200).json({
+      message: 'success',
+      data: { stats },
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error,
+    });
+  }
+}

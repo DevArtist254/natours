@@ -7,6 +7,7 @@ const {
   findAndDelete,
   findAndUpdate,
   getStatsAvgs,
+  getHolidayStats
 } = require('../controller/tourController');
 
 const router = express.Router();
@@ -16,6 +17,7 @@ const router = express.Router();
 router.get('/', getAllTours);
 router.get('/get-Averages', getStatsAvgs);
 router.get('/get-tour-five-tours', getTourFiveTours, getAllTours);
+router.get('/get-holiday-stats',getHolidayStats)
 //Chaining middleware
 router.post('/', createATour);
 router.get('/:id', getATour);

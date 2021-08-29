@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "delDB" : "node ./dev-data/data/import-data.js --delete",
-    "importNewDB" :"node ./dev-data/data/import-data.js --import"
+    "delDB": "node ./dev-data/data/import-data.js --delete",
+    "importNewDB": "node ./dev-data/data/import-data.js --import",
+    "debug": "ndb server.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "mongoose": "^5.13.3"
   },
   "devDependencies": {
+    "ndb": "^1.1.5",
     "nodemon": "^2.0.12"
   }
 }
