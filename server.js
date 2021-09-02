@@ -1,5 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+
+//Programming errors for uncaught errors
+process.on("uncaughtException", err => {
+  console.log(err.name, err.message);
+  process.exit(1)
+})
+
+
 dotenv.config({ path: `./config.env` });
 const app = require('./app');
 const port = process.env.PORT;
@@ -25,6 +33,18 @@ const connectDB = async (DB) => {
 
 connectDB(dataBase);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`the application has started in ${port}...`);
 });
+
+
+//Safty net for mongoose and mongod errors
+process.on("unhandledRejection", err => {
+  console.log(err.name, err.message);
+
+  //Closing the server after ending all calls
+  server.close(() => {
+    process.exit(1)
+  })
+})
+

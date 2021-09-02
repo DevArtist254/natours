@@ -4,7 +4,8 @@
   "description": "backend mastery",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "NODE_ENV=development nodemon server.js",
+    "start:pro": "NODE_ENV=production nodemon server.js",
     "delDB": "node ./dev-data/data/import-data.js --delete",
     "importNewDB": "node ./dev-data/data/import-data.js --import",
     "debug": "ndb server.js"

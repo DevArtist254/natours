@@ -1,4 +1,25 @@
+const ErrorHandle = require("./../utils/errorApp") 
+
+const validationErrorMessage = (err) => {
+  const valueArr = Object.values(err.errors).map(val => val.message)
+  const message = `invalid input ${valueArr.join(" ")}`
+
+  return  new ErrorHandle(message, 400)
+}
+
+const messageCastError = (err) => {
+  const message = `invalid ${err.path} : ${err.value}`
+  return  new ErrorHandle(message, 400)
+}
+
+const messageDuplicateError = err => {
+ const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0]
+  const message = `Duplicate value ${value}`
+  return new ErrorHandle(message, 400)
+}
+
 function devErrorHandling(err,res) {
+
   //Send back as much
   res.status(err.statusCode).json({
     error: err,
@@ -34,6 +55,12 @@ module.exports = (err,req,res,next) => {
     if(process.env.NODE_ENV === "development"){
       devErrorHandling(err,res) 
     }else if(process.env.NODE_ENV === "production"){
-      proErrorHandling(err,res) 
+      let error = {...err}
+
+      if(error.name === "CastError") error = messageCastError(error)
+      if(error.code === 11000) error = messageDuplicateError(error)
+      if(error.name === "ValidationError") error = validationErrorMessage(error)
+
+      proErrorHandling(error,res) 
     }
   }
