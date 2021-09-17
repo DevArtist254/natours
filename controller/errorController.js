@@ -12,6 +12,10 @@ const messageCastError = (err) => {
   return  new ErrorHandle(message, 400)
 }
 
+const handleJWTErr = () => new ErrorHandle("Access denied", 401)
+
+const tokenExpired = () => new ErrorHandle("Timeout! please sign in again", 401)
+
 const messageDuplicateError = err => {
  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0]
   const message = `Duplicate value ${value}`
@@ -60,6 +64,8 @@ module.exports = (err,req,res,next) => {
       if(error.name === "CastError") error = messageCastError(error)
       if(error.code === 11000) error = messageDuplicateError(error)
       if(error.name === "ValidationError") error = validationErrorMessage(error)
+      if(error.name === "JsonWebTokenError") error = handleJWTErr()
+      if(error.name === "TokenExpiredError") error = tokenExpired()
 
       proErrorHandling(error,res) 
     }

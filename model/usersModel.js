@@ -14,6 +14,11 @@ const userSchema = new Schema({
     require: [true, "Please enter your email"],
     validate : [validator.isEmail, "Please enter a valid email"]
     },
+    role : {
+        type : String,
+        enum : ["admin","guide","lead-guide","user"],
+        default : "user"
+    },
     password : {
         type : String,
         minLength : 8,
@@ -23,6 +28,10 @@ const userSchema = new Schema({
     photo : {
         type : String
     },
+    passwordChangedAt : {
+        type: Date,
+        default: Date.now(),
+      },
     passwordConfrim : {
         type : String,
         validate : {
@@ -54,6 +63,17 @@ userSchema.methods.correctPassword = async function(cP, uP){
     return await bcrypt.compare(cP,uP)
 }
 
+userSchema.methods.changedPasswordAfter = function(JWTTimeStamp){
+    if(this.passwordChangedAt){
+        const changedTimeStamp = parseInt(
+            this.passwordChangedAt.getTime()/1000 , 10
+        )
+
+        return JWTTimeStamp < changedTimeStamp
+    }
+
+    return false
+}
 
 
 module.exports = mongoose.model("User", userSchema)

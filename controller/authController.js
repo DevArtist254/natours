@@ -1,3 +1,4 @@
+const { promisify } = require("util")
 const jwt = require("jsonwebtoken")
 const ErrorHandle = require('./../utils/errorApp')
 const User = require("./../model/usersModel")
@@ -54,3 +55,45 @@ exports.login = catchAsync(async (req,res,next) => {
         }
     })
 })
+
+exports.protect = catchAsync(async (req,res,next) => {
+    let token;
+   //get token 
+    if(req.headers.authorizaton && req.headers.authorizaton.startsWith("Bearer")){
+        token = req.headers.authorizaton.split(" ")[1]
+    }
+    //check there is a token
+    if(!token){
+        return next(new ErrorHandle("access denied", 401))
+    }
+    
+   //verification the token promisify the decoded value
+   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+
+   //check if user still exists 
+   let existingUser = await User.findById(decoded.id)
+    if(!existingUser){
+        return next(
+            new ErrorHandle("Access denied", 401)
+        )
+    }
+
+   //check if user changed password after the token was issued 
+   if(existingUser.changedPasswordAfter(decoded.iat)){
+       return next(new ErrorHandle("Access denied", 401))
+   }
+
+   req.user = existingUser
+    next()
+})
+
+exports.restrictTo = (...roles) => {
+    return (req,res,next) => {
+        //roles = 'user'
+        if(!roles.includes(req.user.role)) {
+            return next(new ErrorHandle("Access denied",403))
+        }
+
+        next()
+    }
+}
