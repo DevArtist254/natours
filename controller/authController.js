@@ -3,7 +3,7 @@ const catchAsync = require("./../utils/catchAsync")
 const jwt = require("jsonwebtoken")
 const ErrorHandle = require('./../utils/errorApp')
 const User = require("./../model/usersModel")
-const sendEmail = require("../utils/email")
+const sendEmail = require("./../utils/email")
 const crypto = require("crypto")
 
 
@@ -118,13 +118,15 @@ exports.forgotPassword = async (req,res,next) => {
     // 3:a set up the url string
     const resetURL =  `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
 
-    const message = `Forgot your password? Submit a patch request with your new password to: ${resetURL}`
+    console.log(resetURL)
+
+    const text = `Forgot your password? Submit a patch request with your new password to: ${resetURL}`
 
     try {
         await sendEmail({
         email: user.email,
         subject: `Your password reset token (vaild for 10 min)`,
-        message
+        message: text
     })
 
     res.status(200).json({
@@ -137,7 +139,7 @@ exports.forgotPassword = async (req,res,next) => {
 
         await user.save({validateBeforeSave: false});
 
-        return next(new ErrorHandle(`Something went wrong, try againg`,500))
+        return next(new ErrorHandle(`Fuck you`,500))
     }
 }
 
@@ -159,7 +161,7 @@ exports.resetPassword = catchAsync(async (req,res,next) => {
     user.passwordConfirm = req.body.passwordConfirm;
     
     //token assign
-    const token = jwtSign(newUser._id)
+    const token = jwtSign(user._id)
 
     //Status 201 for created
     res.status(201).json({
