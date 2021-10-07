@@ -61,9 +61,10 @@ exports.login = catchAsync(async (req,res,next) => {
 
 exports.protect = catchAsync(async (req,res,next) => {
     let token;
-   //get token 
-    if(req.headers.authorizaton && req.headers.authorizaton.startsWith("Bearer")){
-        token = req.headers.authorizaton.split(" ")[1]
+
+   //get token
+    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+        token = req.headers.authorization.split(" ")[1]
     }
     //check there is a token
     if(!token){
@@ -169,5 +170,30 @@ exports.resetPassword = catchAsync(async (req,res,next) => {
         data: {
             user : token
         }
+    })
+})
+
+exports.updatePassword = catchAsync( async (req, res, next) => {
+    //1.Get user from collection
+    const user = await User.findById(req.user.id).select('+password');
+
+    //2.Check if posted current password is correct 
+    let {oldPassword, password,passwordConfirm} = req.body
+
+    if(!(await user.correctPassword(oldPassword, user.password))){
+        return next(new ErrorHandle("try again", 400))
+    }
+    //3.if so, update password
+    user.password = password
+    user.passwordConfirm = passwordConfirm
+
+    await user.save()
+
+    const jwt = jwtSign(user._id)
+
+    //4.log user in, send JWT
+    res.status(201).json({
+        message: 'success',
+        token: jwt
     })
 })
