@@ -30,6 +30,7 @@ class APIFeatured {
   sorted() {
     //sorting
     if (this.queryString.sort) {
+      //Convert from "x","y","z" to "x y z"
       const sortedList = this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortedList);
     }
@@ -39,6 +40,7 @@ class APIFeatured {
 
   fields() {
     if (this.queryString.fields) {
+      //Convert from "x","y","z" to "x y z"
       const selectedList = this.queryString.fields.split(',').join(' ');
       this.query = this.query.select(selectedList);
     }

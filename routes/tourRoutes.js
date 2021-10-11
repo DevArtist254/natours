@@ -23,7 +23,7 @@ router.get('/get-holiday-stats',getHolidayStats)
 //Chaining middleware
 router.post('/', createATour);
 router.get('/:id', getATour);
-router.patch('/:id', findAndUpdate);
+router.patch('/:id',protect, findAndUpdate);
 router.delete('/:id', protect,restrictTo("admin","lead-guide"), findAndDelete);
 
 module.exports = router;
