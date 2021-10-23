@@ -34,7 +34,7 @@ app.use(mongoSanitize())
 //Data sanitization against XSS HTML prevention
 app.use(xss())
 
-//Prevent parameter pollution
+//Prevent parameter pollution then whitelist the data you to be doubled
 app.use(hpp({
   whitelist : ["duration","price","maxGroupSize"]
 }))

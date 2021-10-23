@@ -24,8 +24,8 @@ const tourSchema = mongoose.Schema({
   images: [String],
   maxGroupSize: {
     type: Number,
-    maxLength: [40, "only 40 people are allowed in the trip"],
-    minLength: [1, "input error"]
+    // maxLength: [40, "only 40 people are allowed in the trip"],
+    // minLength: [1, "input error"]
   },
   summary: {
     type: String,
@@ -34,34 +34,61 @@ const tourSchema = mongoose.Schema({
   difficulty: {
     type: String,
     require: true,
-    enum :{
-      values : ["easy","medium","difficult"],
-      message : "Please input the correct value"
-    }
+    // enum :{
+    //   values : ["easy","medium","difficult"],
+    //   message : "Please input the correct value"
+    // }
   },
   ratingsAverage: {
     type : Number,
     //Works for dates also
-    min : [1, "please enter correct value of above 1.0"],
-    max: [5, "please enter the correct value of below 5.0"]
+    // min : [1, "please enter correct value of above 1.0"],
+    // max: [5, "please enter the correct value of below 5.0"]
   },
   ratingsQuantity: Number,
   price: { 
     type: Number, 
     require: true ,
-    validate: {
-      validator : function (val) {
-        //should return true or false only work with new documents
-        return val > this.price 
-      },
-      message : "the price ({VALUE}) should be above 100"
-    } 
+    // validate: {
+    //   validator : function (val) {
+    //     //should return true or false only work with new documents
+    //     return val > this.price 
+    //   },
+    //   message : "the price ({VALUE}) should be above 100"
+    // } 
   },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
   startDates: [Date],
+  startLocation : {
+    type : {
+      type : String,
+      default : "Point",
+      enum : ["Point"]
+    },
+    coordinates : [Number],
+    address: String,
+    description: String
+  },
+  locations : [
+    {
+      type : {
+        type : String,
+        default : "Point",
+        enum : ["Point"]
+      },
+      coordinates : [Number],
+      address: String,
+      description: String,
+      day: Number
+    }
+  ]
+},
+{
+  toJSON : {virtuals : true},
+  toObject: {virtuals : true}
 });
 
 // //Document hooks for .pre() .create()

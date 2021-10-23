@@ -26,7 +26,7 @@ const connectDB = async (DB) => {
 connectDB(dataBase);
 
 const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+  fs.readFileSync(`${__dirname}/tours.json`, 'utf-8')
 );
 
 const importAllData = async () => {
@@ -34,7 +34,7 @@ const importAllData = async () => {
     await Tour.create(tours);
     console.log(`Data was successfuly imported`);
   } catch (error) {
-    console.log(`Data was not import`);
+    console.error(error.message);
     process.exit(1);
   }
 };
@@ -43,6 +43,7 @@ const deleteAllData = async () => {
   try {
     await Tour.deleteMany();
     console.log(`Data was successfuly Delete`);
+    process.exit(1);
   } catch (error) {
     console.log(`Data was not Deleted`);
     process.exit(1);
