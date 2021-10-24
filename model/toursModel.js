@@ -24,8 +24,8 @@ const tourSchema = mongoose.Schema({
   images: [String],
   maxGroupSize: {
     type: Number,
-    // maxLength: [40, "only 40 people are allowed in the trip"],
-    // minLength: [1, "input error"]
+    maxLength: [40, "only 40 people are allowed in the trip"],
+    minLength: [1, "input error"]
   },
   summary: {
     type: String,
@@ -34,28 +34,28 @@ const tourSchema = mongoose.Schema({
   difficulty: {
     type: String,
     require: true,
-    // enum :{
-    //   values : ["easy","medium","difficult"],
-    //   message : "Please input the correct value"
-    // }
+    enum :{
+      values : ["easy","medium","difficult"],
+      message : "Please input the correct value"
+    }
   },
   ratingsAverage: {
     type : Number,
     //Works for dates also
-    // min : [1, "please enter correct value of above 1.0"],
-    // max: [5, "please enter the correct value of below 5.0"]
+    min : [1, "please enter correct value of above 1.0"],
+    max: [5, "please enter the correct value of below 5.0"]
   },
   ratingsQuantity: Number,
   price: { 
     type: Number, 
     require: true ,
-    // validate: {
-    //   validator : function (val) {
-    //     //should return true or false only work with new documents
-    //     return val > this.price 
-    //   },
-    //   message : "the price ({VALUE}) should be above 100"
-    // } 
+    validate: {
+      validator : function (val) {
+        //should return true or false only work with new documents
+        return val > this.price 
+      },
+      message : "the price ({VALUE}) should be above 100"
+    } 
   },
   createdAt: {
     type: Date,
@@ -84,12 +84,37 @@ const tourSchema = mongoose.Schema({
       description: String,
       day: Number
     }
+  ],
+  guides : [
+    {
+      //1st create a ref of the other model
+      type : mongoose.Schema.ObjectId,
+      ref: "User"
+    }
   ]
 },
 {
   toJSON : {virtuals : true},
   toObject: {virtuals : true}
 });
+
+//Embedding children onto the parent
+// tourSchema.pre("save", async function (next) {
+//   const guidesPromises = this.guides.map(async id => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises)
+
+//   next()
+// })
+
+tourSchema.pre(/^find/, function(next){
+  this.populate({
+    //start by 1st ref with ObjectId then populate *less performance on id
+    path: "guides",
+    select: "-__v -passwordChangedAt"
+  })
+
+  next()
+})
 
 // //Document hooks for .pre() .create()
 // tourSchema.pre("save,/^find/,aggrerate",  function(next){

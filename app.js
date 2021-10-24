@@ -10,6 +10,7 @@ const hpp = require("hpp")
 //Routes init
 const toursRoute = require('./routes/tourRoutes');
 const usersRoute = require('./routes/userRoutes');
+const reviewsRoute = require('./routes/reviewRoutes')
 const ErrorHandler = require("./utils/errorApp")
 const errorController = require("./controller/errorController")
 
@@ -52,6 +53,7 @@ app.use((req, res, next) => {
 //Route management
 app.use('/natours/v1/tours', toursRoute);
 app.use('/natours/v1/users', usersRoute);
+app.use('/natours/v1/reviews',reviewsRoute);
 
 //error handling for wrong routes
 app.all("*", (req,res,next) =>{
