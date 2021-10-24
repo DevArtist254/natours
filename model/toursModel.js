@@ -106,6 +106,13 @@ const tourSchema = mongoose.Schema({
 //   next()
 // })
 
+//Virtual populate
+tourSchema.virtual("reviews",{
+  ref: "Review",
+  foreignField: "reviewedTour",
+  localField: "_id"
+})
+
 tourSchema.pre(/^find/, function(next){
   this.populate({
     //start by 1st ref with ObjectId then populate *less performance on id

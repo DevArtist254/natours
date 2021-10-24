@@ -37,11 +37,12 @@ reviewSchema.pre(/^find/, function(next){
         //start by 1st ref with ObjectId then populate *less performance on id
         path: "createdBy",
         select: "fullName"
-      }).populate({
-        //start by 1st ref with ObjectId then populate *less performance on id
-        path: "reviewedTour",
-        select: "name"
       })
+    //   .populate({
+    //     //start by 1st ref with ObjectId then populate *less performance on id
+    //     path: "reviewedTour",
+    //     select: "name"
+    //   })
 
     next()
 })

@@ -42,7 +42,7 @@ exports.createATour = catchAsync(async (req, res,next) => {
 exports.getATour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id, (err, tour) => {
     console.log(err);
-  })
+  }).populate('reviews')
 
   if(!tour){
     return new ErrorHandle(`There is no such tour`, 404)
