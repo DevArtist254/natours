@@ -9,10 +9,14 @@ const {
   getStatsAvgs,
   getHolidayStats
 } = require('../controller/tourController');
+const reviewsRoute = require('./reviewRoutes')
 const {protect,restrictTo} = require("./../controller/authController");
 
 
 const router = express.Router();
+
+//tours/id/reviews
+router.use("/:tourId/reviews", reviewsRoute)
 
 //router.param('id', checkId);
 

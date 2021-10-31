@@ -2,6 +2,7 @@ const Tour = require('../model/toursModel');
 const APIFeatured = require('./../utils/features');
 const ErrorHandle = require('./../utils/errorApp')
 const catchAsync = require("./../utils/catchAsync")
+const factory = require("./factoryHandler")
 
 exports.getTourFiveTours = (req, res, next) => {
   req.query.limit = '5';
@@ -74,13 +75,15 @@ exports.findAndUpdate = catchAsync(async (req, res, next) => {
   });
 }) 
 
-exports.findAndDelete = catchAsync(async (req, res,next) => {
-  await Tour.findByIdAndDelete(req.params.id);
+exports.findAndDelete = factory.deleteOne(Tour)
 
-    res.status(204).json({
-      message: 'success',
-    });
-}) 
+// exports.findAndDelete = catchAsync(async (req, res,next) => {
+//   await Tour.findByIdAndDelete(req.params.id);
+
+//     res.status(204).json({
+//       message: 'success',
+//     });
+// }) 
 
 exports.getStatsAvgs = catchAsync(async (req, res,next) => {
   //Set up the pipeline on the model
