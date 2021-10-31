@@ -1,5 +1,4 @@
 const Tour = require('../model/toursModel');
-const APIFeatured = require('./../utils/features');
 const ErrorHandle = require('./../utils/errorApp')
 const catchAsync = require("./../utils/catchAsync")
 const factory = require("./factoryHandler")
@@ -11,79 +10,11 @@ exports.getTourFiveTours = (req, res, next) => {
   next();
 } 
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  let feature = new APIFeatured(Tour.find(), req.query)
-      .filter()
-      .sorted()
-      .fields()
-      .pagination();
-
-    const tours = await feature.query;
-    res.status(200).json({
-      message: 'success',
-      results: tours.length,
-      data: { tours },
-    });
-}) 
-
-exports.createATour = catchAsync(async (req, res,next) => {
-  const tour = await Tour.create(req.body);
-
-  //Sending 404 errors null falsy val NULL = tour
-  if(!tour){
-    return new ErrorHandle(`There is no such tour`, 404)
-  }
-
-    res.status(200).json({
-      message: 'success',
-      tour,
-    });
-}) 
-
-exports.getATour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id, (err, tour) => {
-    console.log(err);
-  }).populate('reviews')
-
-  if(!tour){
-    return new ErrorHandle(`There is no such tour`, 404)
-  }
-
-  res.status(200).json({
-    message: 'success',
-    data: {
-      tour,
-    },
-  });
-}) 
-
-exports.findAndUpdate = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  if(!tour){
-    return new ErrorHandle(`There is no such tour`, 404)
-  }
-  
-  res.status(200).json({
-    message: 'success',
-    data: {
-      tour,
-    },
-  });
-}) 
-
+exports.getAllTours = factory.getAll(Tour)
+exports.getATour = factory.getOne(Tour,{path:"reviews"})
+exports.createATour = factory.createOne(Tour)
+exports.findAndUpdate = factory.updateOne(Tour)
 exports.findAndDelete = factory.deleteOne(Tour)
-
-// exports.findAndDelete = catchAsync(async (req, res,next) => {
-//   await Tour.findByIdAndDelete(req.params.id);
-
-//     res.status(204).json({
-//       message: 'success',
-//     });
-// }) 
 
 exports.getStatsAvgs = catchAsync(async (req, res,next) => {
   //Set up the pipeline on the model
