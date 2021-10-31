@@ -1,3 +1,4 @@
+const factory = require("./factoryHandler")
 const catchAsync = require("./../utils/catchAsync")
 const ErrorHandle = require('./../utils/errorApp')
 const User = require("./../model/usersModel")
@@ -44,3 +45,4 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     })
 })
 
+exports.deleteAdmin = factory.deleteOne(User)
