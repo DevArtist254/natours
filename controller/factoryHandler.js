@@ -1,3 +1,4 @@
+const APIFeatured = require('./../utils/features')
 const ErrorHandle = require('./../utils/errorApp')
 const catchAsync = require("./../utils/catchAsync")
 
@@ -74,7 +75,7 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
     const doc = await feature.query;
     res.status(200).json({
       message: 'success',
-      results: tours.length,
+      results: doc.length,
       data: { doc },
     });
 }) 

@@ -4,7 +4,7 @@ const ErrorHandle = require('./../utils/errorApp')
 const User = require("./../model/usersModel")
 
 exports.getMe = catchAsync(async(req,res,next) =>{
-    if(req.user.id) req.user.id = req.params.id
+    if(req.user.id) req.params.id = req.user.id 
 
     next()
 })
