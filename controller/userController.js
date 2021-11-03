@@ -3,6 +3,16 @@ const catchAsync = require("./../utils/catchAsync")
 const ErrorHandle = require('./../utils/errorApp')
 const User = require("./../model/usersModel")
 
+exports.getMe = catchAsync(async(req,res,next) =>{
+    if(req.user.id) req.user.id = req.params.id
+
+    next()
+})
+
+exports.getAllUsers = factory.getAll(User)
+exports.getAUser = factory.getOne(User)
+exports.deleteAdmin = factory.deleteOne(User)
+
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
     //loop thru the keys of the incoming of the object
@@ -45,4 +55,4 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     })
 })
 
-exports.deleteAdmin = factory.deleteOne(User)
+

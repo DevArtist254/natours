@@ -61,6 +61,7 @@ exports.getOne = (Model,popOpt) => catchAsync(async (req, res, next) => {
 })
 
 exports.getAll = Model => catchAsync(async (req, res, next) => {
+  //hack for reviews
   let filter = {}
     if(!req.params.tourId) filter = {reviewedTour : req.params.tourId}
 
