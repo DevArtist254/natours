@@ -4,7 +4,7 @@ const {createAReview,findAndDelete,getAllReviews,findAndUpdate} = require("./../
 
 const router = express.Router({mergeParams: true});
 
-router.use(restrictTo("user"))
+//router.use(restrictTo("user"))
 
 router.get("/getAllReview", getAllReviews)
 router.post("/createAReview", protect,createAReview);

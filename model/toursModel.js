@@ -106,6 +106,10 @@ const tourSchema = mongoose.Schema({
 //   next()
 // })
 
+//indexing for data that is need at an inst
+tourSchema.index({price : 1})
+tourSchema.index({startLocation: '2dsphere'})
+
 //Virtual populate
 tourSchema.virtual("reviews",{
   ref: "Review",
